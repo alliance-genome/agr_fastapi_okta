@@ -32,9 +32,9 @@ security_responses: Dict = {**unauthenticated_response, **unauthorized_response}
 
 
 class OktaUser(BaseModel):
-    id: str = Field(..., alias='cid')
+    id: str = Field(..., alias='uid')
     email: str = Field(..., alias='sub')
-    # uid: Optional[str] = Field(None, alias='uid')    
+    # cid: Optional[str] = Field(None, alias='cid')    
 
 class OktaHTTPBearer(HTTPBearer):
     async def __call__(self, request: Request):
