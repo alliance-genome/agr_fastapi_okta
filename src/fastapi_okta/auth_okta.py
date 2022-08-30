@@ -12,9 +12,7 @@ from fastapi.openapi.models import OAuthFlows
 from pydantic import BaseModel, Field, ValidationError
 from jose import jwt  # type: ignore
 
-
-
-okta_rule_namespace: str = os.getenv('OKTA_RULE_NAMESPACE', 'https://github.com/alliance-genome/fastapi-okta')
+okta_rule_namespace: str = os.getenv('OKTA_RULE_NAMESPACE', 'https://github.com/alliance-genome/agr_fastapi_okta')
 
 
 class OktaUnauthenticatedException(HTTPException):
@@ -34,10 +32,9 @@ security_responses: Dict = {**unauthenticated_response, **unauthorized_response}
 
 
 class OktaUser(BaseModel):
-    id: str = Field(..., alias='sub')
-    permissions: Optional[List[str]]
-    email: Optional[str] = Field(None, alias=f'{okta_rule_namespace}/email')
-
+    cid: str = Field(..., alias='cid')
+    email: str = Field(..., alias='sub')
+    uid: Optional[str] = Field(None, alias='uid')    
 
 class OktaHTTPBearer(HTTPBearer):
     async def __call__(self, request: Request):
@@ -190,7 +187,7 @@ class Okta:
 
             if self.email_auto_error and not user.email:
                 raise OktaUnauthorizedException(detail=f'Missing email claim (check okta rule "Add email to access token")')
-
+            
             return user
 
         except ValidationError as e:
