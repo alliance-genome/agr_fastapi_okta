@@ -15,7 +15,7 @@ def init_tmp_dir():
 
 
 init_tmp_dir()
-base_path = environ.get('TMP_PATH')
+base_path = environ.get('TMP_PATH', environ.get('XML_PATH'))
 
 
 def generate_headers(token):
@@ -54,15 +54,14 @@ def update_okta_token():  # pragma: no cover
     logging.warning(post_return.text)
     response_dict = loads(post_return.text)
     token = response_dict['access_token']
-    okta_file = environ.get('TMP_PATH') + 'okta_token'
-    os.makedirs(environ.get('TMP_PATH'), exist_ok=True)
+    okta_file = base_path + 'okta_token'
     with open(okta_file, 'w') as okta_fh:
         okta_fh.write("%s" % token)
     return token
 
 
 def get_authentication_token():  # pragma: no cover
-    okta_file = environ.get('TMP_PATH') + 'okta_token'
+    okta_file = base_path + 'okta_token'
     if path.isfile(okta_file):
         one_day_ago = datetime.now() - relativedelta(days=1)
         file_time = datetime.fromtimestamp(path.getmtime(okta_file))
