@@ -14,6 +14,7 @@ def init_base_path():
     makedirs(base_path, exist_ok=True)
 
 
+base_path = environ.get('TMP_PATH', environ.get('XML_PATH'))
 init_base_path()
 
 
