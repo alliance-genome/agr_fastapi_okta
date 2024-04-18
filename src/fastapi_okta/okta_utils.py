@@ -9,13 +9,8 @@ from os import environ, makedirs
 import requests
 
 
-def init_tmp_dir():
-    base_path = environ.get('TMP_PATH', "")
-    makedirs(base_path, exist_ok=True)
-
-
-init_tmp_dir()
 base_path = environ.get('TMP_PATH', environ.get('XML_PATH'))
+makedirs(base_path, exist_ok=True)
 
 
 def generate_headers(token):
