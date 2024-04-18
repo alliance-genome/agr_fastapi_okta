@@ -9,8 +9,12 @@ from os import environ, makedirs
 import requests
 
 
-base_path = environ.get('TMP_PATH', environ.get('XML_PATH'))
-makedirs(base_path, exist_ok=True)
+def init_base_path():
+    base_path = environ.get('TMP_PATH', environ.get('XML_PATH'))
+    makedirs(base_path, exist_ok=True)
+
+
+init_base_path()
 
 
 def generate_headers(token):
@@ -49,6 +53,7 @@ def update_okta_token():  # pragma: no cover
     logging.warning(post_return.text)
     response_dict = loads(post_return.text)
     token = response_dict['access_token']
+    init_base_path()
     okta_file = base_path + 'okta_token'
     with open(okta_file, 'w') as okta_fh:
         okta_fh.write("%s" % token)
